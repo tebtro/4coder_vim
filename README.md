@@ -5,6 +5,7 @@ Work in progress!
 
 ## Features
 - Vim state per view
+- Statusbar
 - Basic vim move commands:
     - W E B, w e b, 0 $, ...
     - Find and find till, forward and backward
