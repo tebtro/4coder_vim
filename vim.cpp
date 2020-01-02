@@ -492,19 +492,19 @@ inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_ntimes_move_right) {
 }
 
 inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_ntimes_move_up_by_page) {
-    f32 page_jump = get_page_jump(app, view_id);
+    f32 page_jump = get_page_jump(app, view_id) * (f32)vim_state->execute_command_count;
     move_vertical_pixels(app, -page_jump);
 }
 inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_ntimes_move_down_by_page) {
-    f32 page_jump = get_page_jump(app, view_id);
+    f32 page_jump = get_page_jump(app, view_id) * (f32)vim_state->execute_command_count;
     move_vertical_pixels(app, page_jump);
 }
 inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_ntimes_move_up_by_page_half) {
-    f32 page_jump = get_page_jump(app, view_id) * 0.5f;
+    f32 page_jump = get_page_jump(app, view_id) * 0.5f * (f32)vim_state->execute_command_count;
     move_vertical_pixels(app, -page_jump);
 }
 inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_ntimes_move_down_by_page_half) {
-    f32 page_jump = get_page_jump(app, view_id) * 0.5f;
+    f32 page_jump = get_page_jump(app, view_id) * 0.5f * (f32)vim_state->execute_command_count;
     move_vertical_pixels(app, page_jump);
 }
 
@@ -522,16 +522,6 @@ inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_ntimes_move_down_by_whitespace) {
     for (int i = 0; i < vim_state->execute_command_count; ++i) {
         seek_blank_line(app, Scan_Forward, PositionWithinLine_SkipLeadingWhitespace);
     }
-}
-
-inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_once_move_to_file_start) {
-    view_set_cursor_and_preferred_x(app, view_id, seek_pos(0));
-    no_mark_snap_to_cursor_if_shift(app, view_id);
-}
-inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_once_move_to_file_end) {
-    i32 size = (i32)buffer_get_size(app, buffer_id);
-    view_set_cursor_and_preferred_x(app, view_id, seek_pos(size));
-    no_mark_snap_to_cursor_if_shift(app, view_id);
 }
 
 inline void
@@ -577,62 +567,89 @@ inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_ntimes_move_left_before_found) {
 
 
 inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_ntimes_move_right_word_start) {
-    // @todo Wrong :behaviour
-    move_right_alpha_numeric_boundary(app);
-    move_right(app);
+    // @cleanup
+    // @todo Wrong :behaviour?
+    for (int i = 0; i < vim_state->execute_command_count; ++i) {
+        move_right_alpha_numeric_boundary(app);
+        move_right(app);
+    }
 }
 inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_ntimes_move_right_token_start) {
-    // @todo Wrong :behaviour
-    move_right_token_boundary(app);
-    move_right(app);
+    // @cleanup
+    // @todo Wrong :behaviour?
+    for (int i = 0; i < vim_state->execute_command_count; ++i) {
+        move_right_token_boundary(app);
+        move_right(app);
+    }
 }
 inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_ntimes_move_right_one_after_whitespace) {
-    // @todo Wrong :behaviour
-    move_right_whitespace_boundary(app);
-    move_right(app);
+    // @cleanup
+    // @todo Wrong :behaviour?
+    for (int i = 0; i < vim_state->execute_command_count; ++i) {
+        move_right_whitespace_boundary(app);
+        move_right(app);
+    }
 }
 
 inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_ntimes_move_right_word_end) {
     // @cleanup
-    move_right(app);
-    move_right_alpha_numeric_boundary(app);
-    move_left(app);
+    for (int i = 0; i < vim_state->execute_command_count; ++i) {
+        move_right(app);
+        move_right_alpha_numeric_boundary(app);
+        move_left(app);
+    }
 }
 inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_ntimes_move_right_token_end) {
     // @cleanup
-    move_right(app);
-    move_right_token_boundary(app);
-    move_left(app);
+    for (int i = 0; i < vim_state->execute_command_count; ++i) {
+        move_right(app);
+        move_right_token_boundary(app);
+        move_left(app);
+    }
 }
 inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_ntimes_move_right_one_before_whitespace) {
     // @cleanup
-    move_right(app);
-    move_right_whitespace_boundary(app);
-    move_left(app);
+    for (int i = 0; i < vim_state->execute_command_count; ++i) {
+        move_right(app);
+        move_right_whitespace_boundary(app);
+        move_left(app);
+    }
 }
 
 
 inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_ntimes_move_left_word_start) {
-    move_left_alpha_numeric_boundary(app);
+    for (int i = 0; i < vim_state->execute_command_count; ++i) {
+        move_left_alpha_numeric_boundary(app);
+    }
 }
 inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_ntimes_move_left_token_start) {
-    move_left_token_boundary(app);
+    for (int i = 0; i < vim_state->execute_command_count; ++i) {
+        move_left_token_boundary(app);
+    }
 }
 inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_ntimes_move_left_one_before_whitespace) {
-    move_left_whitespace_boundary(app);
+    for (int i = 0; i < vim_state->execute_command_count; ++i) {
+        move_left_whitespace_boundary(app);
+    }
 }
 
 inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_ntimes_move_left_word_end) {
-    // @todo Wrong :behaviour
-    move_left_alpha_numeric_boundary(app);
+    // @todo Wrong :behaviour?
+    for (int i = 0; i < vim_state->execute_command_count; ++i) {
+        move_left_alpha_numeric_boundary(app);
+    }
 }
 inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_ntimes_move_left_token_end) {
-    // @todo Wrong :behaviour
-    move_left_token_boundary(app);
+    // @todo Wrong :behaviour?
+    for (int i = 0; i < vim_state->execute_command_count; ++i) {
+        move_left_token_boundary(app);
+    }
 }
 inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_ntimes_move_left_one_after_whitespace) {
-    // @todo Wrong :behaviour
-    move_left_whitespace_boundary(app);
+    // @todo Wrong :behaviour?
+    for (int i = 0; i < vim_state->execute_command_count; ++i) {
+        move_left_whitespace_boundary(app);
+    }
 }
 
 // @note execute once
@@ -646,6 +663,16 @@ inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_once_move_to_line_start) {
 }
 inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_once_move_to_line_end) {
     seek_pos_of_visual_line(app, Side_Max);
+}
+
+inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_once_move_to_file_start) {
+    view_set_cursor_and_preferred_x(app, view_id, seek_pos(0));
+    no_mark_snap_to_cursor_if_shift(app, view_id);
+}
+inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_once_move_to_file_end) {
+    i32 size = (i32)buffer_get_size(app, buffer_id);
+    view_set_cursor_and_preferred_x(app, view_id, seek_pos(size));
+    no_mark_snap_to_cursor_if_shift(app, view_id);
 }
 
 inline VIM_NTIMES_CUSTOM_COMMAND_SIG(_vim_once_goto_line) {
